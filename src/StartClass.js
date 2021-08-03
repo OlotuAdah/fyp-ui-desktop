@@ -1,14 +1,19 @@
 import { useState } from 'react';
-import { Modal, Select, Typography } from 'antd';
+import { Button, Modal, Select, Typography } from 'antd';
 import { CloseCircleTwoTone } from '@ant-design/icons';
 import StudentsRecognized from './StudentsRecognized';
+import { useData } from './context/DataProvider';
+import { sleep } from './utils/HelperFunctions';
 
 const StartClass = ({ openClass, setOpenClass }) => {
   const [showStudents, setShowStudents] = useState(false);
+  //const [loading, setLoading] = useState(false);
+  const { courses, setProgressOpen } = useData();
 
   const { Option } = Select;
   function onChange(value) {
     console.log(`selected ${value}`);
+    takeAttendance(value);
 
     //value selected ...
     //call backend api to start attendance on pi
@@ -17,17 +22,24 @@ const StartClass = ({ openClass, setOpenClass }) => {
   function onSearch(val) {
     console.log('search:', val);
   }
-  function takeAttendance() {
+  async function takeAttendance(value) {
     setOpenClass(false);
+    setProgressOpen(true);
+    await sleep(3000).then(() => {
+      console.log('Time elapsed!');
+    }); //[dumi for now] create a function that will call api endpoit for attendance data
     // NB: you can acess variable val which is value(course) selected by user
     setShowStudents(true);
+    setProgressOpen(false);
+
+    console.log('Results Returned..');
   }
 
   return (
     <div style={{ position: 'relative' }}>
       <Modal
         title={
-          <Typography style={{ color: '#1890ff' }}>Start Class</Typography>
+          <Typography style={{ color: '#1890ff' }}>Select A Course</Typography>
         }
         width={300}
         visible={openClass}
@@ -35,6 +47,7 @@ const StartClass = ({ openClass, setOpenClass }) => {
         maskClosable={false}
         onOk={() => takeAttendance()}
         onCancel={() => setOpenClass(false)}
+        footer={null}
         okText='Take Attendance'
         cancelText='cancel'
         closeIcon={<CloseCircleTwoTone />}
@@ -52,7 +65,14 @@ const StartClass = ({ openClass, setOpenClass }) => {
             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }
         >
-          <Option className='option' value='jack1'>
+          {courses.length > 1 ? (
+            courses.map((course) => (
+              <Option className='option' value={course.code} />
+            ))
+          ) : (
+            <Option className='option' value={courses.code} />
+          )}
+          {/* <Option className='option' value='jack1'>
             Jack1
           </Option>
           <Option className='option' value='lucy1'>
@@ -80,8 +100,12 @@ const StartClass = ({ openClass, setOpenClass }) => {
           </Option>
           <Option className='option' value='tom3'>
             Tom3
-          </Option>
+          </Option> */}
         </Select>
+        <p />
+        <Button type='primary' onClick={() => takeAttendance()}>
+          Take Attendance
+        </Button>
       </Modal>
       <StudentsRecognized
         showStudents={showStudents}

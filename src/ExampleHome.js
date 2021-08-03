@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Layout,
   Menu,
@@ -8,13 +9,14 @@ import {
   Avatar,
   Badge,
   Rate,
+  Tooltip,
   Typography,
 } from 'antd';
 import {
   // DesktopOutlined,
   SketchOutlined,
-  // CloseCircleTwoTone,
-  // MinusCircleTwoTone,
+  CloseCircleTwoTone,
+  MinusCircleTwoTone,
   //DownloadOutlined,
   //FileOutlined,
   SafetyOutlined,
@@ -23,37 +25,28 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 
-//import face2 from '../src/images/face2.png';
-//import face3 from '../src/images/face3.jpg';
-//import face8 from '../src/images/face8.jpg';
-//import face6 from '../src/images/face6.jpg';
-//import face4 from '../src/images/face4.jpg';
-//import face7 from '../src/images/face7.jpg';
+import adah from '../src/images/adah.png';
+import eje from '../src/images/eje.jpg';
+import face8 from '../src/images/face8.jpg';
+import face6 from '../src/images/face6.jpg';
+import face4 from '../src/images/face4.jpg';
+import supervisor from '../src/images/supervisor.jpg';
 import face9 from '../src/images/face9.jpg';
 import face10 from '../src/images/face10.jpg';
 import fut1 from '../src/images/fut1.png';
+//import fut2 from '../src/images/fut2.jpg';
 import fut4 from '../src/images/fut4.jpeg';
-import AttendanceProgress from './AttendanceProgress';
-
-///////////////////////////////////////////////////
-import adah from './images/adah.png';
-import eje from './images/eje.jpg';
-import suoervisor from './images/supervisor.jpg';
-
-//////////////////////////////////////////////////
 import DrawerForm from './Drawer';
 import LoginModal from './LoginModal';
 import StartClass from './StartClass';
 
 import { useData } from './context/DataProvider';
-import { deleteLogFile } from './utils/HelperFunctions';
 
 const { Header, Content, Footer, Sider } = Layout;
 //const { SubMenu } = Menu;
 
 const HomePage = () => {
-  const { login, setLogin, email } = useData();
-
+  const { login } = useData();
   const [collapsed, setCollapsed] = useState(true);
   const [drawerVisibility, setDrawerVisibility] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
@@ -66,12 +59,6 @@ const HomePage = () => {
     setCollapsed(collapsed);
   };
 
-  const logout = () => {
-    setOpenClass(false); //dont open dialog for course selection
-    deleteLogFile();
-    setLogin(false);
-  };
-
   return (
     <React.Fragment>
       <Layout style={{ minHeight: '100vh' }}>
@@ -82,29 +69,16 @@ const HomePage = () => {
           id='components-layout-demo-side'
         >
           <div className='logo'>
-            {!login ? (
-              <Button
-                type='primary'
-                size='small'
-                onClick={() => setLoginOpen(!loginOpen)}
-                ghost
-                style={{ marginRight: '65px' }}
-                icon={!collapsed ? <UserOutlined /> : null}
-              >
-                log in
-              </Button>
-            ) : (
-              <Button
-                type='primary'
-                size='small'
-                onClick={() => logout()}
-                ghost
-                style={{ marginRight: '65px' }}
-                icon={!collapsed ? <UserOutlined /> : null}
-              >
-                logout
-              </Button>
-            )}
+            <Button
+              type='primary'
+              size='small'
+              onClick={() => setLoginOpen(!loginOpen)}
+              ghost
+              style={{ marginRight: '65px' }}
+              icon={!collapsed ? <UserOutlined /> : null}
+            >
+              log in
+            </Button>
           </div>
           <Menu theme='dark' mode='inline'>
             <Menu.Item key={1}>
@@ -182,7 +156,9 @@ const HomePage = () => {
           <Content style={{ margin: '0 16px', position: 'relative' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>{login ? email : null}</Breadcrumb.Item>
+              <Breadcrumb.Item>
+                {login ? ' ' : 'adaholotu@gmail.com'}
+              </Breadcrumb.Item>
             </Breadcrumb>
             <div
               className='site-layout-background'
@@ -190,32 +166,32 @@ const HomePage = () => {
             >
               <Carousel autoplay className='carousel'>
                 <div>
-                  <img src={face10} alt='face2' />
+                  <img src={face10} alt='face10' />
                 </div>
                 <div>
-                  <img src={suoervisor} alt='face3' />
+                  <img src={eje} alt='face3' />
                 </div>
                 <div>
-                  <img src={face9} alt='face4' />
+                  <img src={supervisor} alt='face4' />
                 </div>
                 <div>
                   <img src={fut4} alt='fut4' />
                 </div>
                 <div>
-                  <img src={adah} alt='face6' />
+                  <img src={face6} alt='face6' />
                 </div>
 
                 <div>
-                  <img src={eje} alt='face7' />
+                  <img src={supervisor} alt='face7' />
                 </div>
                 <div>
-                  <img src={suoervisor} alt='face8' />
+                  <img src={face8} alt='face8' />
                 </div>
                 <div>
                   <img src={face9} alt='face9' />
                 </div>
                 <div>
-                  <img src={face10} alt='face10' />
+                  <img src={adah} alt='face10' />
                 </div>
                 <div>
                   <img src={fut1} alt='fut1' />
@@ -226,11 +202,10 @@ const HomePage = () => {
             <Button
               type='primary'
               shape='round'
-              onClick={() => setOpenClass(true)}
+              onClick={() => setOpenClass(!openClass)}
               icon={<SafetyOutlined />}
               size='large'
               style={{ position: 'absolute', bottom: '10px', right: '10px' }}
-              disabled={!login}
             >
               Start Class
             </Button>
@@ -248,7 +223,6 @@ const HomePage = () => {
       />
       <LoginModal loginOpen={loginOpen} setLoginOpen={setLoginOpen} />
       <StartClass openClass={openClass} setOpenClass={setOpenClass} />
-      <AttendanceProgress />
     </React.Fragment>
   );
 };

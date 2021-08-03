@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { getLoginFile } from '../utils/HelperFunctions';
 
 const DataContext = React.createContext();
 
@@ -7,11 +8,24 @@ export const useData = () => {
 };
 
 function DataProvider({ children }) {
-  const [login, setLogin] = useState(false);
+  const logState = getLoginFile();
+  const [login, setLogin] = useState(logState);
+  const [userDetails, setUserDetails] = useState({});
+  const [email, setMail] = useState('');
+  const [progressOpen, setProgressOpen] = useState(false);
+  const [courses, setCourses] = useState([]);
 
   const contextData = {
     login,
     setLogin,
+    userDetails,
+    setUserDetails,
+    setMail,
+    email,
+    courses,
+    setCourses,
+    progressOpen,
+    setProgressOpen,
   };
 
   return (
